@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Día de las Flores Amarillas - Daly</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000000;
+      font-family: 'Montserrat', sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Imágenes flotantes de fondo */
+    .bg-photo {
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      opacity: 0.55;
+      z-index: 5;
+      pointer-events: none;
+      animation: floatAnim 4s ease-in-out infinite alternate;
+    }
+
+    /* Posiciones para cada imagen */
+    .photo-1 { top: 10%; left: 5%; transform: rotate(-6deg); animation-delay: 0s; }
+    .photo-2 { top: 8%; left: 45%; transform: rotate(5deg); animation-delay: 0.7s; }
+    .photo-3 { top: 12%; right: 6%; transform: rotate(-4deg); animation-delay: 1.4s; }
+    .photo-4 { bottom: 12%; left: 8%; transform: rotate(4deg); animation-delay: 2.1s; }
+    .photo-5 { bottom: 10%; left: 42%; transform: rotate(-5deg); animation-delay: 0.3s; }
+    .photo-6 { bottom: 15%; right: 5%; transform: rotate(6deg); animation-delay: 1.8s; }
+
+    @keyframes floatAnim {
+      0% {
+        transform: translateY(0px) rotate(-4deg);
+      }
+      100% {
+        transform: translateY(-12px) rotate(4deg);
+      }
+    }
+
+    #message {
+      position: absolute;
+      top: 50%;
+      left: 4%;
+      transform: translateY(-50%);
+      width: 45%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    #message.show {
+      opacity: 1;
+    }
+
+    #message h1 {
+      color: #ffd700 !important;
+    }
+
+    #message p, 
+    #message strong {
+      color: #ffffff !important;
+    }
+
+    #message .subtext {
+      color: #ffd700 !important;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+    }
+
+    p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .subtext {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      text-transform: none;
+      margin-top: 20px;
+      border-top: 2.5px solid #ffffff;
+      padding-top: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    #click-prompt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #000000;
+      cursor: pointer;
+      z-index: 30;
+      background: #ffd700;
+      padding: 16px 32px;
+      border-radius: 40px;
+      box-shadow: 0 10px 25px rgba(255,215,0,0.3);
+      border: 3px solid #ffffff;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #click-prompt:hover {
+      transform: translate(-50%, -50%) scale(1.06);
+      box-shadow: 0 12px 30px rgba(255,215,0,0.5);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Audio en segundo plano (oculto) -->
+<audio id="bg-music" src="amor.mp3" loop style="display: none;"></audio>
+
+<div id="container">
+  <!-- Imágenes flotantes de fondo -->
+  <img src="imagen1.jpeg" class="bg-photo photo-1" alt="Foto 1">
+  <img src="imagen2.jpeg" class="bg-photo photo-2" alt="Foto 2">
+  <img src="imagen3.jpeg" class="bg-photo photo-3" alt="Foto 3">
+  <img src="imagen4.jpeg" class="bg-photo photo-4" alt="Foto 4">
+  <img src="imagen5.jpeg" class="bg-photo photo-5" alt="Foto 5">
+  <img src="imagen6.jpeg" class="bg-photo photo-6" alt="Foto 6">
+
+  <div id="click-prompt">🌻 Click Aquí</div>
+  
+  <div id="message">
+    <h1>🌻 FELIZ DÍA DE LAS FLORES AMARILLAS 🌻</h1>
+    <p>
+      PARA DALY:<br><br>
+      CADA GIRASOL QUE VES AQUÍ ES UNA MUESTRA DEL MUCHÍSIMO CARIÑO QUE TE TENGO Y UN LATIDO DE MI CORAZÓN.<br><br>
+      ASÍ COMO EL SOL ILUMINA LOS CAMPOS, TÚ ILUMINAS MI VIDA.<br><br>
+      QUE ESTAS FLORES TE RECUERDEN LO ESPECIAL QUE ERES PARA MÍ.<br><br>
+      <strong>¡TE QUIERO MUCHO!</strong>
+    </p>
+    <div class="subtext">Eres el sol que hace florecer cada uno de mis días.</div>
+  </div>
+</div>
+
+<script>
+let state = 'WAITING'; // WAITING, GROWING_TREE, GROWING_FLOWERS, MOVING, FINISHED
+let treeProgress = 0;
+let flowers = [];
+let treeX;
+let targetX;
+let groundY;
+
+function setup() {
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent('container');
+  treeX = width * 0.5;
+  targetX = width * 0.78;
+  groundY = height * 0.85;
+
+  generatePerfectHeartFlowers();
+}
+
+function generatePerfectHeartFlowers() {
+  flowers = [];
+  let heartScale = 14;
+  let heartOffsetY = -230;
+
+  function getParametricHeartPoint(t, r) {
+    let rawX = 16 * Math.pow(Math.sin(t), 3);
+    let rawY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    
+    return {
+      x: rawX * heartScale * r,
+      y: (rawY * heartScale * r) + heartOffsetY
+    };
+  }
+
+  let outlineCount = 95;
+  for (let i = 0; i < outlineCount; i++) {
+    let t = (TWO_PI * i) / outlineCount;
+    let pt = getParametricHeartPoint(t, 1.0);
+    flowers.push({ relX: pt.x, relY: pt.y, scale: 0, targetScale: random(22, 26), delay: random(0, 40) });
+  }
+
+  let midCount = 80;
+  for (let i = 0; i < midCount; i++) {
+    let t = (TWO_PI * i) / midCount;
+    let pt = getParametricHeartPoint(t, 0.75);
+    flowers.push({ relX: pt.x, relY: pt.y, scale: 0, targetScale: random(20, 24), delay: random(20, 60) });
+  }
+
+  let innerCount = 55;
+  for (let i = 0; i < innerCount; i++) {
+    let t = (TWO_PI * i) / innerCount;
+    let pt = getParametricHeartPoint(t, 0.50);
+    flowers.push({ relX: pt.x, relY: pt.y, scale: 0, targetScale: random(19, 23), delay: random(30, 75) });
+  }
+
+  let coreCount = 30;
+  for (let i = 0; i < coreCount; i++) {
+    let t = (TWO_PI * i) / coreCount;
+    let pt = getParametricHeartPoint(t, 0.25);
+    flowers.push({ relX: pt.x, relY: pt.y, scale: 0, targetScale: random(18, 22), delay: random(40, 85) });
+  }
+
+  let tipPt = getParametricHeartPoint(PI, 0.1);
+  flowers.push({ relX: tipPt.x, relY: tipPt.y, scale: 0, targetScale: 20, delay: 50 });
+
+  flowers.sort((a, b) => a.relY - b.relY);
+}
+
+function draw() {
+  clear();
+
+  // Línea del suelo derecha
+  stroke('#333333');
+  strokeWeight(2);
+  line(width * 0.45, groundY, width, groundY);
+
+  if (state !== 'WAITING') {
+    push();
+    translate(treeX, groundY);
+
+    // Tronco y ramas
+    stroke('#4caf50');
+    strokeCap(ROUND);
+    
+    strokeWeight(16);
+    let currentTrunkHeight = -210 * min(treeProgress, 1);
+    line(0, 0, 0, currentTrunkHeight);
+
+    if (treeProgress > 0.4) {
+      let bProg = (treeProgress - 0.4) * 1.66;
+      strokeWeight(7);
+      line(0, -100, -35 * bProg, -180 * bProg);
+      line(0, -100, 35 * bProg, -180 * bProg);
+      line(0, -140, -18 * bProg, -210 * bProg);
+      line(0, -140, 18 * bProg, -210 * bProg);
+    }
+
+    if (state === 'GROWING_TREE') {
+      treeProgress += 0.02;
+      if (treeProgress >= 1) {
+        state = 'GROWING_FLOWERS';
+      }
+    }
+
+    if (state === 'GROWING_FLOWERS' || state === 'MOVING' || state === 'FINISHED') {
+      let allGrown = true;
+      for (let f of flowers) {
+        if (f.delay > 0) {
+          f.delay--;
+          allGrown = false;
+        } else {
+          if (f.scale < f.targetScale) {
+            f.scale += 0.75;
+            allGrown = false;
+          }
+          drawSunflower(f.relX, f.relY, f.scale);
+        }
+      }
+
+      if (allGrown && state === 'GROWING_FLOWERS') {
+        setTimeout(() => { state = 'MOVING'; }, 250);
+      }
+    }
+
+    pop();
+  }
+
+  if (state === 'MOVING') {
+    treeX = lerp(treeX, targetX, 0.03);
+    if (abs(treeX - targetX) < 1) {
+      treeX = targetX;
+      state = 'FINISHED';
+      document.getElementById('message').classList.add('show');
+    }
+  }
+}
+
+function drawSunflower(x, y, size) {
+  if (size <= 0) return;
+  
+  push();
+  translate(x, y);
+  noStroke();
+  
+  fill('#ffd700');
+  let petalCount = 12;
+  for (let i = 0; i < petalCount; i++) {
+    ellipse(0, 0, size * 1.15, size * 0.32);
+    rotate(TWO_PI / petalCount);
+  }
+  
+  fill('#ffae00');
+  for (let i = 0; i < petalCount; i++) {
+    ellipse(0, 0, size * 0.9, size * 0.24);
+    rotate(TWO_PI / petalCount);
+  }
+
+  fill('#3b1e08');
+  circle(0, 0, size * 0.48);
+
+  fill('#231003');
+  circle(0, 0, size * 0.32);
+  
+  pop();
+}
+
+function mousePressed() {
+  if (state === 'WAITING') {
+    document.getElementById('click-prompt').style.display = 'none';
+    
+    // Reproduce la música al hacer clic
+    let audio = document.getElementById('bg-music');
+    if (audio) {
+      audio.play().catch(e => console.log('Error de audio:', e));
+    }
+    
+    state = 'GROWING_TREE';
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  targetX = width * 0.78;
+  groundY = height * 0.85;
+  generatePerfectHeartFlowers();
+}
+</script>
+</body>
+</html>
